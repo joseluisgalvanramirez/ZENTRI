@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<title>Login - Zentri</title>
+
+<style>
+    .volver-inicio{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.btn-volver{
+    display:inline-block;
+    padding:10px 20px;
+    background:linear-gradient(135deg,#6C63FF,#5A54E0);
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:500;
+    transition:all 0.3s ease;
+}
+
+.btn-volver:hover{
+    background:linear-gradient(135deg,#5A54E0,#4742C5);
+    transform:translateY(-2px);
+    box-shadow:0 5px 10px rgba(0,0,0,0.2);
+}
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#6C63FF,#3F3D56);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:0;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:15px;
+width:360px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:1px solid #ccc;
+border-radius:8px;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#6C63FF;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+margin-top:10px;
+}
+
+button:hover{
+background:#5148d6;
+}
+
+.menu button{
+margin-bottom:10px;
+}
+
+.form{
+display:none;
+}
+
+.regresar{
+background:#888;
+}
+
+.regresar:hover{
+background:#555;
+}
+
+.small{
+font-size:14px;
+color:#666;
+margin-top:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Zentri Vocacional</h1>
+
+
+
+<!-- MENU PRINCIPAL -->
+
+<div id="menu" class="menu">
+
+<button onclick="mostrar('loginForm')">Iniciar sesión</button>
+
+<button onclick="mostrar('registroForm')">Crear cuenta</button>
+
+<button onclick="mostrar('recuperarForm')">Olvidé contraseña</button>
+
+<div class="contenedor">
+    
+    <!-- Botón para volver al inicio -->
+    <div class="volver-inicio">
+        <a href="index.html" class="btn-volver">Volver al Inicio</a>
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- LOGIN -->
+
+<div id="loginForm" class="form">
+
+<h2>Iniciar sesión</h2>
+
+<input id="loginEmail" placeholder="Correo">
+
+<input id="loginPassword" type="password" placeholder="Contraseña">
+
+<button onclick="login()">Entrar</button>
+
+<button class="regresar" onclick="volver()">Regresar</button>
+
+</div>
+
+
+<!-- REGISTRO -->
+
+<div id="registroForm" class="form">
+
+<h2>Crear cuenta</h2>
+
+<input id="regNombre" placeholder="Nombre">
+
+<input id="regEmail" placeholder="Correo">
+
+<input id="regPass" type="password" placeholder="Contraseña">
+
+<button onclick="registrar()">Crear cuenta</button>
+
+<button class="regresar" onclick="volver()">Regresar</button>
+
+</div>
+
+
+<!-- RECUPERAR -->
+
+<div id="recuperarForm" class="form">
+
+<h2>Recuperar contraseña</h2>
+
+<input id="recEmail" placeholder="Correo">
+
+<button onclick="recuperar()">Recuperar</button>
+
+<button class="regresar" onclick="volver()">Regresar</button>
+
+</div>
+
+<p class="small">Zentri Vocacional</p>
+
+</div>
+
+
+<script src="js/auth.js"></script>
+
+<script>
+
+// mostrar formularios
+
+function mostrar(form){
+
+document.getElementById("menu").style.display="none"
+
+document.getElementById("loginForm").style.display="none"
+document.getElementById("registroForm").style.display="none"
+document.getElementById("recuperarForm").style.display="none"
+
+document.getElementById(form).style.display="block"
+
+}
+
+
+// regresar al menu
+
+function volver(){
+
+document.getElementById("menu").style.display="block"
+
+document.getElementById("loginForm").style.display="none"
+document.getElementById("registroForm").style.display="none"
+document.getElementById("recuperarForm").style.display="none"
+
+}
+
+
+// LOGIN
+
+function login(){
+
+const email=document.getElementById("loginEmail").value
+const pass=document.getElementById("loginPassword").value
+
+const r=authSystem.login(email,pass)
+
+alert(r.message)
+
+if(r.success){
+window.location.href="perfil.html"
+}
+
+}
+
+
+// REGISTRO
+
+function registrar(){
+
+const nombre=document.getElementById("regNombre").value
+const email=document.getElementById("regEmail").value
+const pass=document.getElementById("regPass").value
+
+const r=authSystem.registrar(nombre,email,pass)
+
+alert(r.message)
+
+}
+
+
+// RECUPERAR
+
+function recuperar(){
+
+const email=document.getElementById("recEmail").value
+
+const r=authSystem.recuperarPassword(email)
+
+if(r.success){
+
+alert("Tu contraseña temporal es: "+r.tempPassword)
+
+}else{
+
+alert(r.message)
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

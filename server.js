@@ -13,55 +13,40 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
 
-// 🔐 Obtener token
-async function obtenerToken() {
-    const res = await fetch("https://api.apiyi.com/token", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            apiKey: process.env.APIYI_KEY
-        })
-    });
-
-    const data = await res.json();
-    return data.token;
-}
-
-// 🤖 Ruta IA
+// ✅ IA CON APIYI
 app.post("/api/ia", async (req, res) => {
     try {
         const { mensaje } = req.body;
 
-        const token = await obtenerToken();
-
-        // ⚠️ ESTA RUTA ES EJEMPLO (puede cambiar según APIYI)
-        const response = await fetch("https://api.apiyi.com/chat", {
+        const response = await fetch("https://api.apiyi.com/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${process.env.APIYI_KEY}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: mensaje
+                model: "gpt-4.1-mini", // puedes cambiar modelo
+                messages: [
+                    { role: "system", content: "Eres un asistente vocacional." },
+                    { role: "user", content: mensaje }
+                ]
             })
         });
 
         const data = await response.json();
 
         res.json({
-            respuesta: data.response || "Sin respuesta"
+            respuesta: data.choices?.[0]?.message?.content || "Sin respuesta"
         });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error con APIYI" });
+        res.status(500).json({ error: "Error IA APIYI" });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor en http://localhost:${PORT}`);
+    console.log("Servidor en http://localhost:3000");
 });

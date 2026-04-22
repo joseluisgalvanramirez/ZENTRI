@@ -15,7 +15,7 @@ export async function handler(event) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}` // 🔐 API KEY
+                "Authorization": `Bearer ${process.env.sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e}` // 🔐 API KEY
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini",

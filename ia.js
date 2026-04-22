@@ -6,7 +6,7 @@ export async function handler(event) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({
-                    respuesta: "Debes escribir un mensaje"
+                    respuesta: "Escribe un mensaje"
                 })
             };
         }
@@ -15,14 +15,14 @@ export async function handler(event) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e}` // 🔐 API KEY
+                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini",
                 messages: [
                     {
                         role: "system",
-                        content: "Eres un orientador vocacional que ayuda a estudiantes a elegir carrera."
+                        content: "Eres un orientador vocacional que ayuda a estudiantes."
                     },
                     {
                         role: "user",
@@ -37,7 +37,7 @@ export async function handler(event) {
         return {
             statusCode: 200,
             body: JSON.stringify({
-                respuesta: data.choices?.[0]?.message?.content || "Error con la IA"
+                respuesta: data.choices?.[0]?.message?.content || "Error IA"
             })
         };
 

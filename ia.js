@@ -5,9 +5,7 @@ export async function handler(event) {
         if (!mensaje) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({
-                    respuesta: "Escribe un mensaje"
-                })
+                body: JSON.stringify({ respuesta: "Mensaje vacío" })
             };
         }
 
@@ -20,28 +18,31 @@ export async function handler(event) {
             body: JSON.stringify({
                 model: "gpt-4o-mini",
                 messages: [
-                    {
-                        role: "system",
-                        content: "Eres un orientador vocacional para estudiantes."
-                    },
-                    {
-                        role: "user",
-                        content: mensaje
-                    }
+                    { role: "system", content: "Eres un orientador vocacional." },
+                    { role: "user", content: mensaje }
                 ]
             })
         });
 
         const data = await response.json();
 
+        if (!data.choices) {
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ respuesta: "Error en IA (API)" })
+            };
+        }
+
         return {
             statusCode: 200,
             body: JSON.stringify({
-                respuesta: data.choices?.[0]?.message?.content || "Error IA"
+                respuesta: data.choices[0].message.content
             })
         };
 
     } catch (error) {
+        console.error(error);
+
         return {
             statusCode: 500,
             body: JSON.stringify({

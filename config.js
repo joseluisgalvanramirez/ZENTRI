@@ -1,0 +1,8 @@
+const CONFIG = {
+    API_URL: "https://api.apiyi.com/v1/chat/completions",
+    API_KEY: "sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e",
+
+    BASE_PATH: window.location.hostname.includes("github.io")
+        ? "/ZENTRI"
+        : ""
+};

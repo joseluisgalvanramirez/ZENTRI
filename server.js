@@ -23,7 +23,7 @@ app.post("/api/ia", async (req, res) => {
         const response = await fetch("https://api.apiyi.com/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${process.env.APIYI_KEY}`,
+                "Authorization": `Bearer ${process.env.sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({

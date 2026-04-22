@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENTRI Vocacional - Descubre tu verdadera vocación</title>
+    <link rel="stylesheet" href="css/vocacional-styles.css">
+    <link rel="stylesheet" href="css/assistant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos adicionales */
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        .card1 {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .card2 {
+            top: 40%;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+        
+        .card3 {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-image {
+            flex: 1;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .vocacional-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 4rem;
+        }
+        
+        .hero-content {
+            flex: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .btn-hero-primary {
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(65, 88, 208, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(65, 88, 208, 0.4);
+        }
+        
+        .btn-hero-secondary {
+            background: white;
+            color: #333;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn-hero-secondary:hover {
+            border-color: #4158D0;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .btn-arrow {
+            transition: transform 0.3s;
+        }
+        
+        .btn-hero-primary:hover .btn-arrow {
+            transform: translateX(5px);
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .how-it-works {
+            padding: 5rem 5%;
+            background: #f8f9fa;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .step-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step-icon {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+        
+        .step-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .step-card p {
+            color: #666;
+        }
+        
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .area-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #333;
+            border-left: 5px solid;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            display: block;
+        }
+        
+        .area-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .area-card h3 {
+            margin: 1rem 0 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .area-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .area-link {
+            color: #4158D0;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .final-cta {
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            padding: 5rem 5%;
+            text-align: center;
+            color: white;
+        }
+        
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .btn-cta {
+            background: white;
+            color: #4158D0;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        
+        .btn-cta:hover .btn-arrow {
+            transform: translateX(5px);
+        }
+        
+        .vocacional-footer {
+            background: #2C3E50;
+            color: white;
+            padding: 3rem 5%;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-brand {
+            grid-column: span 2;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .footer-brand p {
+            color: #a0aec0;
+        }
+        
+        .footer-links h4,
+        .footer-contact h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links a {
+            display: block;
+            color: #cbd5e0;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-contact p {
+            color: #cbd5e0;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .vocacional-hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 8rem;
+            }
+            
+            .hero-image {
+                display: none;
+            }
+            
+            .hero-subtitle {
+                margin: 0 auto 2rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .hero-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-brand {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="vocacional-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span style="font-size: 2rem;">🎯</span>
+                ZENTRI <span style="font-weight: 400; opacity: 0.8;">Vocacional</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active">Inicio</a>
+                <a href="test-vocacional.html">Test Vocacional</a>
+                <a href="carreras.html">Carreras</a>
+                <a href="perfil.html" id="nav-perfil-link">Mi Perfil</a>
+                <a href="login.html" id="nav-login-link">Iniciar Sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="vocacional-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                ¿No sabes qué carrera <span class="gradient-text">estudiar?</span>
+            </h1>
+            <p class="hero-subtitle">
+                Descubre tu verdadera vocación con nuestro test de orientación vocacional impulsado por IA. 
+                Analizamos tus intereses, habilidades y personalidad para recomendarte las carreras ideales.
+            </p>
+            <div class="hero-buttons">
+                <a href="test-vocacional.html" class="btn-hero-primary">
+                    Comenzar test vocacional
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="carreras.html" class="btn-hero-secondary">
+                    Explorar carreras
+                </a>
+            </div>
+           
+        </div>
+        <div class="hero-image">
+            <div class="floating-card card1">🔍 Descubrimiento</div>
+            <div class="floating-card card2">📊 Análisis IA</div>
+            <div class="floating-card card3">🎯 Vocación</div>
+        </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>¿Cómo funciona?</h2>
+            <p>Tu camino hacia el descubrimiento vocacional en 3 simples pasos</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">📝</div>
+                <h3>Realiza el test</h3>
+                <p>Responde preguntas sobre tus intereses y habilidades. Solo toma 10 minutos.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">🤖</div>
+                <h3>IA analiza tu perfil</h3>
+                <p>Nuestra inteligencia artificial procesa tus respuestas y determina tu perfil vocacional.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">🎓</div>
+                <h3>Recibe recomendaciones</h3>
+                <p>Obtén una lista personalizada de carreras ideales para ti con información detallada.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Áreas profesionales -->
+    <section class="career-areas" style="padding: 5rem 5%;">
+        <div class="section-header">
+            <h2>Áreas profesionales</h2>
+            <p>Explora las diferentes áreas del conocimiento y encuentra tu pasión</p>
+        </div>
+
+        <div class="areas-grid" id="areas-container">
+            <!-- Se llena con JavaScript -->
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="final-cta">
+        <div class="cta-content">
+            <h2>¿Listo para descubrir tu vocación?</h2>
+            <p>Miles de estudiantes ya encontraron su camino. El tuyo te espera.</p>
+            <a href="test-vocacional.html" class="btn-cta">
+                Comenzar ahora
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="vocacional-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-logo">🎯 Zentri Vocacional</span>
+                <p>Descubre tu verdadera vocación con IA</p>
+            </div>
+            <div class="footer-links">
+                <h4>Enlaces</h4>
+                <a href="test-vocacional.html">Test Vocacional</a>
+                <a href="carreras.html">Catálogo de carreras</a>
+                <a href="perfil.html">Mi perfil</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p>hola@zentri-vocacional.com</p>
+                <p>© 2024 Zentri Vocacional</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Asistente flotante -->
+    <div class="assistant-container" id="assistant-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/carreras-database.js"></script>
+    <script src="js/vocacional-ai.js"></script>
+    <script src="js/asistente-vocacional.js"></script>
+    <script src="js/assistant-ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+     document.addEventListener('DOMContentLoaded', function() {
+            // Cargar áreas profesionales
+            const areasContainer = document.getElementById('areas-container');
+            
+            if (areasContainer && window.CARRERAS_DB) {
+                let areasHTML = '';
+                for (const [key, area] of Object.entries(window.CARRERAS_DB)) {
+                    areasHTML += `
+                        <a href="carreras.html?area=${key}" class="area-card" style="border-color: ${area.color}">
+                            <div style="font-size: 2.5rem;">${area.icono}</div>
+                            <h3>${area.nombre}</h3>
+                            <p>${area.carreras.length} carreras</p>
+                            <span class="area-link">Explorar →</span>
+                        </a>
+                    `;
+                }
+                areasContainer.innerHTML = areasHTML;
+            }
+
+            // 🔐 CAMBIAR BOTÓN DE LOGIN A CERRAR SESIÓN
+
+const loginLink = document.getElementById("nav-login-link")
+const perfilLink = document.getElementById("nav-perfil-link")
+
+if(window.authSystem && authSystem.haySesion()){
+
+    const usuario = authSystem.getUsuarioActual()
+
+    loginLink.textContent = "Cerrar sesión"
+    loginLink.href = "#"
+
+    loginLink.onclick = function(e){
+        e.preventDefault()
+        authSystem.logout()
+    }
+
+}else{
+
+    loginLink.textContent = "Iniciar Sesión"
+    loginLink.href = "login.html"
+
+}
+        });
+    </script>
+</body>
+</html>

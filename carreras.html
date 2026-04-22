@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zentri Vocacional - Carreras</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6C63FF, #8E2DE2);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #6C63FF, #8E2DE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #6C63FF;
+        }
+
+        .contenedor {
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #6C63FF, #8E2DE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .descripcion {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .filtros {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .filtro-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            background: #f0f0f0;
+            color: #333;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .filtro-btn:hover {
+            background: #6C63FF;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .filtro-btn.active {
+            background: linear-gradient(90deg, #6C63FF, #8E2DE2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.2);
+            border-color: #6C63FF;
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .card p {
+            color: #666;
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .card .duracion {
+            color: #6C63FF;
+            font-weight: 600;
+        }
+
+        .card .salario {
+            color: #8E2DE2;
+            font-weight: 600;
+        }
+
+        .card .area-badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .area-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .area-icono-grande {
+            font-size: 3rem;
+        }
+
+        .area-estadisticas {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .area-stat {
+            text-align: center;
+        }
+
+        .area-stat .numero {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #6C63FF;
+        }
+
+        .area-stat .etiqueta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .btn-volver {
+            display: inline-block;
+            margin: 40px auto 0;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #6C63FF, #FF6584);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-volver:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .error h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #6C63FF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .filtros {
+                gap: 5px;
+            }
+            
+            .filtro-btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .area-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar para navegación -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">🎯 Zentri Vocacional</a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="test-vocacional.html">Test</a>
+            <a href="carreras.html" class="active">Carreras</a>
+            <a href="perfil.html" id="nav-perfil-link">Mi Perfil</a>
+            <a href="login.html" id="nav-login-link">Iniciar Sesión</a>
+        </div>
+    </nav>
+
+    <div class="contenedor">
+
+        <!-- Filtros por área -->
+        <div class="filtros" id="filtros">
+            <button class="filtro-btn" onclick="cambiarArea('todas')">Todas</button>
+            <button class="filtro-btn" onclick="cambiarArea('tecnologia')">💻 Tecnología</button>
+            <button class="filtro-btn" onclick="cambiarArea('salud')">🏥 Salud</button>
+            <button class="filtro-btn" onclick="cambiarArea('sociales')">📚 Sociales</button>
+            <button class="filtro-btn" onclick="cambiarArea('negocios')">📊 Negocios</button>
+            <button class="filtro-btn" onclick="cambiarArea('artes')">🎨 Artes</button>
+            <button class="filtro-btn" onclick="cambiarArea('exactas')">🔬 Exactas</button>
+        </div>
+
+        <!-- Título y descripción -->
+        <h1 id="titulo-area">Cargando...</h1>
+        <p class="descripcion" id="descripcion-area"></p>
+
+        <!-- Información del área (visible solo cuando se selecciona un área específica) -->
+        <div id="area-info" style="display: none;" class="area-info"></div>
+
+        <!-- Grid de carreras -->
+        <div class="grid" id="lista-carreras">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Cargando carreras...</p>
+            </div>
+        </div>
+
+        <!-- Botón para volver al inicio -->
+        <div style="text-align: center;">
+            <a href="index.html" class="btn-volver">← Volver al Inicio</a>
+        </div>
+
+    </div>
+
+    <script src="js/carreras-database.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function mostrarAreaEspecifica(area) {
+            const areaData = window.CARRERAS_DB[area];
+
+            document.getElementById("titulo-area").textContent = areaData.nombre;
+            document.getElementById("descripcion-area").textContent =
+                areaData.descripcion || `Carreras en el área de ${areaData.nombre}`;
+
+            const areaInfo = document.getElementById("area-info");
+            areaInfo.style.display = "flex";
+
+            areaInfo.innerHTML = `
+                <div class="area-icono-grande">${areaData.icono}</div>
+                <div class="area-estadisticas">
+                    <div class="area-stat">
+                        <div class="numero">${areaData.carreras.length}</div>
+                        <div class="etiqueta">Carreras</div>
+                    </div>
+                </div>
+            `;
+
+            activarBoton(area);
+
+            const carrerasFiltradas = areaData.carreras.map(carrera => ({
+                ...carrera,
+                areaNombre: areaData.nombre,
+                areaIcono: areaData.icono,
+                areaColor: areaData.color
+            }));
+
+            mostrarCarreras(carrerasFiltradas);
+        }
+
+        function mostrarTodasLasCarreras() {
+            document.getElementById("titulo-area").textContent = "Todas las Carreras";
+            document.getElementById("descripcion-area").textContent =
+                "Explora todas las carreras disponibles en nuestra plataforma";
+
+            document.getElementById("area-info").style.display = "none";
+            document.getElementById("filtros").style.display = "flex";
+
+            activarBoton("todas");
+
+            let todasLasCarreras = [];
+
+            for (const [areaKey, area] of Object.entries(window.CARRERAS_DB)) {
+                area.carreras.forEach(carrera => {
+                    todasLasCarreras.push({
+                        ...carrera,
+                        areaNombre: area.nombre,
+                        areaIcono: area.icono,
+                        areaColor: area.color
+                    });
+                });
+            }
+
+            mostrarCarreras(todasLasCarreras);
+        }
+
+        function mostrarCarreras(carreras) {
+            const lista = document.getElementById("lista-carreras");
+
+            if (!carreras || carreras.length === 0) {
+                lista.innerHTML = `<p style="text-align:center;grid-column:1/-1;padding:40px;">No se encontraron carreras</p>`;
+                return;
+            }
+
+            let html = "";
+
+            carreras.forEach(carrera => {
+                const descripcion = carrera.descripcion || "Sin descripción disponible";
+
+                html += `
+                    <div class="card" onclick="verDetalleCarrera('${carrera.id}')">
+                        <h3>${carrera.nombre}</h3>
+                        <p>${descripcion.substring(0,100)}${descripcion.length > 100 ? "..." : ""}</p>
+                        <p class="duracion">⏱️ ${carrera.duracion || "N/A"}</p>
+                        <p class="salario">💰 ${carrera.salario_promedio || "N/A"}</p>
+                        <span class="area-badge" style="background:${carrera.areaColor}20;color:${carrera.areaColor};">
+                            ${carrera.areaIcono} ${carrera.areaNombre}
+                        </span>
+                    </div>
+                `;
+            });
+
+            lista.innerHTML = html;
+        }
+
+        function cambiarArea(area) {
+            if (area === "todas") {
+                mostrarTodasLasCarreras();
+            } else {
+                mostrarAreaEspecifica(area);
+            }
+
+            const url = new URL(window.location);
+            if (area === "todas") {
+                url.searchParams.delete("area");
+            } else {
+                url.searchParams.set("area", area);
+            }
+            window.history.pushState({}, "", url);
+        }
+
+        function activarBoton(area) {
+            document.querySelectorAll(".filtro-btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (
+                    (area === "todas" && btn.textContent.includes("Todas")) ||
+                    btn.getAttribute("onclick")?.includes(area)
+                ) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        function mostrarDetalleCarrera(id) {
+            let carreraEncontrada = null;
+
+            for (const [areaKey, area] of Object.entries(window.CARRERAS_DB)) {
+                const carrera = area.carreras.find(c => c.id === id);
+                if (carrera) {
+                    carreraEncontrada = { 
+                        ...carrera, 
+                        areaNombre: area.nombre, 
+                        areaIcono: area.icono, 
+                        areaColor: area.color 
+                    };
+                    break;
+                }
+            }
+
+            if (!carreraEncontrada) {
+                document.getElementById('lista-carreras').innerHTML = `<p class="error">Carrera no encontrada</p>`;
+                document.getElementById('titulo-area').textContent = "Error";
+                document.getElementById('descripcion-area').textContent = "La carrera que buscas no existe.";
+                document.getElementById('area-info').style.display = "none";
+                activarBoton("todas");
+                return;
+            }
+
+            document.getElementById('filtros').style.display = 'none';
+            document.getElementById('area-info').style.display = 'none';
+            document.getElementById('titulo-area').textContent = carreraEncontrada.nombre;
+            document.getElementById('descripcion-area').textContent = "";
+
+            const lista = document.getElementById('lista-carreras');
+            const descripcionLarga = carreraEncontrada.descripcion_larga || carreraEncontrada.descripcion || "Sin descripción detallada.";
+            const campoLaboral = carreraEncontrada.campo_laboral ? carreraEncontrada.campo_laboral.join(', ') : 'Información no disponible';
+
+            lista.innerHTML = `
+                <div style="grid-column: 1/-1; padding: 20px;">
+                    <h2>${carreraEncontrada.nombre}</h2>
+                    <p><strong>Área:</strong> ${carreraEncontrada.areaIcono} ${carreraEncontrada.areaNombre}</p>
+                    <p><strong>Descripción:</strong> ${descripcionLarga}</p>
+                    <p><strong>Duración:</strong> ${carreraEncontrada.duracion || 'N/A'}</p>
+                    <p><strong>Salario promedio:</strong> ${carreraEncontrada.salario_promedio || 'N/A'}</p>
+                    <p><strong>Campo laboral:</strong> ${campoLaboral}</p>
+                    <p><strong>Habilidades requeridas:</strong> ${carreraEncontrada.habilidades_requeridas ? carreraEncontrada.habilidades_requeridas.join(', ') : 'N/A'}</p>
+                    <br>
+                    <button class="btn-volver" onclick="window.location.href='carreras.html'">← Volver a todas las carreras</button>
+                </div>
+            `;
+        }
+
+        function verDetalleCarrera(id) {
+            window.location.href = `carreras.html?detalle=${id}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!window.CARRERAS_DB) {
+                document.getElementById('lista-carreras').innerHTML = `
+                    <div class="error">
+                        <h2>Error al cargar las carreras</h2>
+                        <p>No se pudo cargar la base de datos.</p>
+                    </div>`;
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const areaSeleccionada = params.get("area");
+            const carreraDetalle = params.get("detalle");
+
+            if (carreraDetalle) {
+                mostrarDetalleCarrera(carreraDetalle);
+            }
+            else if (areaSeleccionada && window.CARRERAS_DB[areaSeleccionada]) {
+                mostrarAreaEspecifica(areaSeleccionada);
+            }
+            else {
+                mostrarTodasLasCarreras();
+            }
+        });
+    </script>
+</body>
+</html>

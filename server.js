@@ -12,7 +12,7 @@ async function enviarMensaje() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer TU_API_KEY_AQUI"
+                "Authorization": "Bearer sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e"
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini",

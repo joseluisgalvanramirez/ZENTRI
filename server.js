@@ -33,61 +33,95 @@ app.get('/', (req, res) => {
 });
 
 // ====================
+// 🧪 STATUS (para pruebas)
+// ====================
+app.get('/api/status', (req, res) => {
+    res.json({
+        status: 'OK',
+        mensaje: 'Servidor funcionando'
+    });
+});
+
+// ====================
 // 🤖 IA ASISTENTE
 // ====================
 app.post('/api/ia', async (req, res) => {
     const { mensaje } = req.body;
+
+    // 🔴 Validación básica
+    if (!mensaje) {
+        return res.status(400).json({
+            respuesta: "Debes enviar un mensaje"
+        });
+    }
 
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // 🔐 API KEY
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` // <-- PON TU KEY EN .env
+
+                // 🔐 API KEY desde .env
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
                 model: 'gpt-4o-mini',
                 messages: [
-                    { role: 'system', content: 'Eres un orientador vocacional para estudiantes.' },
-                    { role: 'user', content: mensaje }
+                    {
+                        role: 'system',
+                        content: 'Eres un orientador vocacional que ayuda a estudiantes a elegir carrera en México.'
+                    },
+                    {
+                        role: 'user',
+                        content: mensaje
+                    }
                 ]
             })
         });
 
         const data = await response.json();
 
-        if (!data.choices) {
-            return res.json({ respuesta: "Error con la IA (API KEY o conexión)" });
+        // 🔴 Manejo de error de OpenAI
+        if (data.error) {
+            console.error("Error OpenAI:", data.error);
+            return res.status(500).json({
+                respuesta: "Error con la API de IA"
+            });
         }
 
+        // 🔴 Validación de estructura
+        if (!data.choices || !data.choices[0]) {
+            return res.status(500).json({
+                respuesta: "Respuesta inválida de la IA"
+            });
+        }
+
+        // ✅ Respuesta correcta
         res.json({
             respuesta: data.choices[0].message.content
         });
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ respuesta: "Error del servidor" });
+        console.error("Error servidor:", error);
+        res.status(500).json({
+            respuesta: "Error interno del servidor"
+        });
     }
 });
 
 // ====================
-// API EXTRA
-// ====================
-app.get('/api/status', (req, res) => {
-    res.json({ status: 'OK' });
-});
-
-// ====================
-// ERRORES
+// MANEJO DE ERRORES
 // ====================
 app.use((req, res) => {
     res.status(404).send('No encontrado');
 });
 
 // ====================
-// INICIAR
+// INICIAR SERVIDOR
 // ====================
 app.listen(PORT, () => {
-    console.log(`Servidor en http://localhost:${PORT}`);
+    console.log('==============================');
+    console.log('🚀 ZENTRI SERVIDOR ACTIVO');
+    console.log(`🌐 http://localhost:${PORT}`);
+    console.log('==============================');
 });

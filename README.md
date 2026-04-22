@@ -24,5 +24,5 @@ Mejorar el rendimiento académico y ampliar las oportunidades educativas y profe
 
 1. Clonar el repositorio:
 ```bash
-git clone https://github.com/tuusuario/zentri.git
+git clone https://github.com/joseluisgalvanramirez/zentri.git
 cd zentri

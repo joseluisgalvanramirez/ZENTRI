@@ -15,7 +15,6 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// ✅ IA CON APIYI
 app.post("/api/ia", async (req, res) => {
     try {
         const { mensaje } = req.body;
@@ -23,13 +22,13 @@ app.post("/api/ia", async (req, res) => {
         const response = await fetch("https://api.apiyi.com/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${process.env.sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e}`,
+                "Authorization": `Bearer ${process.env.APIYI_KEY}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "gpt-4.1-mini", // puedes cambiar modelo
+                model: "gpt-4.1-mini",
                 messages: [
-                    { role: "system", content: "Eres un asistente vocacional." },
+                    { role: "system", content: "Eres un orientador vocacional." },
                     { role: "user", content: mensaje }
                 ]
             })
@@ -43,7 +42,7 @@ app.post("/api/ia", async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error IA APIYI" });
+        res.status(500).json({ error: "Error IA" });
     }
 });
 

@@ -1,34 +1,22 @@
-import express from "express";
-import fetch from "node-fetch";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+async function enviarMensaje() {
+    const input = document.getElementById("inputMensaje");
+    const chat = document.getElementById("chat");
 
-dotenv.config();
+    const mensaje = input.value;
+    if (!mensaje) return;
 
-const app = express();
-const PORT = 3000;
+    chat.innerHTML += `<div>🧑 ${mensaje}</div>`;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(express.json());
-app.use(express.static(__dirname));
-
-app.post("/api/ia", async (req, res) => {
     try {
-        const { mensaje } = req.body;
-
         const response = await fetch("https://api.apiyi.com/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${process.env.APIYI_KEY}`,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer TU_API_KEY_AQUI"
             },
             body: JSON.stringify({
-                model: "gpt-4.1-mini",
+                model: "gpt-4o-mini",
                 messages: [
-                    { role: "system", content: "Eres un orientador vocacional." },
                     { role: "user", content: mensaje }
                 ]
             })
@@ -36,16 +24,13 @@ app.post("/api/ia", async (req, res) => {
 
         const data = await response.json();
 
-        res.json({
-            respuesta: data.choices?.[0]?.message?.content || "Sin respuesta"
-        });
+        const respuesta = data.choices?.[0]?.message?.content || "Error";
+
+        chat.innerHTML += `<div>🤖 ${respuesta}</div>`;
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error IA" });
+        chat.innerHTML += `<div>⚠️ Error al conectar</div>`;
     }
-});
 
-app.listen(PORT, () => {
-    console.log("Servidor en http://localhost:3000");
-});
+    input.value = "";
+}

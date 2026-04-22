@@ -5,7 +5,7 @@ const chat = document.getElementById("chat");
 btn.addEventListener("click", enviarMensaje);
 
 async function enviarMensaje() {
-    const mensaje = input.value;
+    const mensaje = input.value.trim();
 
     if (!mensaje) return;
 
@@ -20,11 +20,22 @@ async function enviarMensaje() {
             body: JSON.stringify({ mensaje })
         });
 
+        // 🔴 VALIDAR RESPUESTA HTTP
+        if (!res.ok) {
+            throw new Error("Error en la respuesta del servidor");
+        }
+
         const data = await res.json();
+
+        // 🔴 VALIDAR CONTENIDO
+        if (!data.respuesta) {
+            throw new Error("Respuesta vacía de la IA");
+        }
 
         chat.innerHTML += `<p><b>IA:</b> ${data.respuesta}</p>`;
 
     } catch (error) {
+        console.error("Error:", error);
         chat.innerHTML += `<p style="color:red;">Error conectando con el asistente</p>`;
     }
 

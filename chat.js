@@ -1,10 +1,13 @@
 const input = document.getElementById("inputMensaje");
-const boton = document.getElementById("btnEnviar");
+const btn = document.getElementById("btnEnviar");
 const chat = document.getElementById("chat");
 
-boton.addEventListener("click", enviarMensaje);
+// Detecta entorno (local vs producción)
+const API_URL = window.location.hostname === "localhost"
+    ? "http://localhost:5501"
+    : "https://TU-PROYECTO.onrender.com"; // <-- CAMBIA ESTO
 
-async function enviarMensaje() {
+btn.addEventListener("click", async () => {
     const mensaje = input.value;
 
     if (!mensaje) return;
@@ -12,7 +15,7 @@ async function enviarMensaje() {
     chat.innerHTML += `<p><b>Tú:</b> ${mensaje}</p>`;
 
     try {
-        const res = await fetch("https://TU-PROYECTO.onrender.com/api/ia", {
+        const res = await fetch(`${API_URL}/api/ia`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -25,9 +28,8 @@ async function enviarMensaje() {
         chat.innerHTML += `<p><b>IA:</b> ${data.respuesta}</p>`;
 
     } catch (error) {
-        chat.innerHTML += `<p style="color:red;">Error con la IA</p>`;
-        console.error(error);
+        chat.innerHTML += `<p style="color:red;">Error de conexión</p>`;
     }
 
     input.value = "";
-}
+});

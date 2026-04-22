@@ -5,7 +5,6 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
-const fetch = require('node-fetch'); // <-- IA
 
 // ====================
 // CONFIG
@@ -18,18 +17,13 @@ const PORT = process.env.PORT || 5501;
 // ====================
 app.use(cors());
 app.use(express.json());
-
-// ====================
-// ARCHIVOS ESTÁTICOS
-// ====================
-app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname)); // Sirve archivos desde la raíz
 
 // ====================
 // RUTA PRINCIPAL
 // ====================
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // ====================
@@ -48,10 +42,17 @@ app.get('/api/status', (req, res) => {
 app.post('/api/ia', async (req, res) => {
     const { mensaje } = req.body;
 
-    // 🔴 Validación básica
     if (!mensaje) {
         return res.status(400).json({
             respuesta: "Debes enviar un mensaje"
+        });
+    }
+
+    // Verificar que la API key existe
+    if (!process.env.OPENAI_API_KEY) {
+        console.error("❌ OPENAI_API_KEY no configurada");
+        return res.status(500).json({
+            respuesta: "Error de configuración del servidor"
         });
     }
 
@@ -60,43 +61,42 @@ app.post('/api/ia', async (req, res) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-
-                // 🔐 API KEY desde .env
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
+                model: 'gpt-3.5-turbo', // Usa gpt-3.5-turbo que es más económico
                 messages: [
                     {
                         role: 'system',
-                        content: 'Eres un orientador vocacional que ayuda a estudiantes a elegir carrera en México.'
+                        content: `Eres ZENTRI, un asistente vocacional para estudiantes mexicanos.
+                        Ayudas a elegir carreras universitarias. Das respuestas cortas y útiles.
+                        Hablas de manera amigable y motivadora.`
                     },
                     {
                         role: 'user',
                         content: mensaje
                     }
-                ]
+                ],
+                temperature: 0.7,
+                max_tokens: 500
             })
         });
 
         const data = await response.json();
 
-        // 🔴 Manejo de error de OpenAI
         if (data.error) {
             console.error("Error OpenAI:", data.error);
             return res.status(500).json({
-                respuesta: "Error con la API de IA"
+                respuesta: `Error: ${data.error.message || "Error con la IA"}`
             });
         }
 
-        // 🔴 Validación de estructura
         if (!data.choices || !data.choices[0]) {
             return res.status(500).json({
-                respuesta: "Respuesta inválida de la IA"
+                respuesta: "No se pudo generar una respuesta"
             });
         }
 
-        // ✅ Respuesta correcta
         res.json({
             respuesta: data.choices[0].message.content
         });
@@ -104,7 +104,7 @@ app.post('/api/ia', async (req, res) => {
     } catch (error) {
         console.error("Error servidor:", error);
         res.status(500).json({
-            respuesta: "Error interno del servidor"
+            respuesta: "Error interno del servidor. Intenta de nuevo más tarde."
         });
     }
 });
@@ -113,7 +113,7 @@ app.post('/api/ia', async (req, res) => {
 // MANEJO DE ERRORES
 // ====================
 app.use((req, res) => {
-    res.status(404).send('No encontrado');
+    res.status(404).sendFile(path.join(__dirname, 'index.html'));
 });
 
 // ====================

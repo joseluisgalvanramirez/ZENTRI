@@ -9,10 +9,11 @@ async function enviarMensaje() {
 
     if (!mensaje) return;
 
-    chat.innerHTML += `<p><b>Tú:</b> ${mensaje}</p>`;
+    agregarMensaje("Tú", mensaje);
+    input.value = "";
 
     try {
-        const res = await fetch("/.netlify/functions/ia", {
+        const res = await fetch("/api/ia", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -20,24 +21,18 @@ async function enviarMensaje() {
             body: JSON.stringify({ mensaje })
         });
 
-        // 🔴 VALIDAR RESPUESTA HTTP
-        if (!res.ok) {
-            throw new Error("Error en la respuesta del servidor");
-        }
-
         const data = await res.json();
 
-        // 🔴 VALIDAR CONTENIDO
-        if (!data.respuesta) {
-            throw new Error("Respuesta vacía de la IA");
-        }
-
-        chat.innerHTML += `<p><b>IA:</b> ${data.respuesta}</p>`;
+        agregarMensaje("IA", data.respuesta);
 
     } catch (error) {
-        console.error("Error:", error);
-        chat.innerHTML += `<p style="color:red;">Error conectando con el asistente</p>`;
+        agregarMensaje("IA", "Error al conectar con el servidor");
+        console.error(error);
     }
+}
 
-    input.value = "";
+function agregarMensaje(usuario, mensaje) {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${usuario}:</strong> ${mensaje}`;
+    chat.appendChild(div);
 }

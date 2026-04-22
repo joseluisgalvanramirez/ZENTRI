@@ -22,7 +22,7 @@ export async function handler(event) {
                 messages: [
                     {
                         role: "system",
-                        content: "Eres un orientador vocacional que ayuda a estudiantes."
+                        content: "Eres un orientador vocacional para estudiantes."
                     },
                     {
                         role: "user",

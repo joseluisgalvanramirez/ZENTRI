@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5501;
 // ====================
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname)); // Sirve archivos desde la raíz
+app.use(express.static(__dirname));
 
 // ====================
 // RUTA PRINCIPAL
@@ -27,36 +27,27 @@ app.get('/', (req, res) => {
 });
 
 // ====================
-// 🧪 STATUS (para pruebas)
-// ====================
-app.get('/api/status', (req, res) => {
-    res.json({
-        status: 'OK',
-        mensaje: 'Servidor funcionando'
-    });
-});
-
-// ====================
-// 🤖 IA ASISTENTE
+// 🤖 IA ASISTENTE - Endpoint principal
 // ====================
 app.post('/api/ia', async (req, res) => {
     const { mensaje } = req.body;
 
     if (!mensaje) {
         return res.status(400).json({
-            respuesta: "Debes enviar un mensaje"
+            respuesta: "Por favor, escribe un mensaje para poder ayudarte."
         });
     }
 
-    // Verificar que la API key existe
+    // Si no hay API key, usar respuestas locales
     if (!process.env.OPENAI_API_KEY) {
-        console.error("❌ OPENAI_API_KEY no configurada");
-        return res.status(500).json({
-            respuesta: "Error de configuración del servidor"
-        });
+        console.log("⚠️ Usando respuestas locales (sin API key)");
+        const respuestaLocal = generarRespuestaLocal(mensaje);
+        return res.json({ respuesta: respuestaLocal });
     }
 
     try {
+        const fetch = (await import('node-fetch')).default;
+        
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -64,13 +55,14 @@ app.post('/api/ia', async (req, res) => {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: 'gpt-3.5-turbo', // Usa gpt-3.5-turbo que es más económico
+                model: 'gpt-3.5-turbo',
                 messages: [
                     {
                         role: 'system',
                         content: `Eres ZENTRI, un asistente vocacional para estudiantes mexicanos.
-                        Ayudas a elegir carreras universitarias. Das respuestas cortas y útiles.
-                        Hablas de manera amigable y motivadora.`
+                        Das respuestas cortas (máximo 3 párrafos), amigables y útiles.
+                        Ayudas a elegir carreras universitarias basándote en intereses y habilidades.
+                        Si no sabes algo, lo dices honestamente.`
                     },
                     {
                         role: 'user',
@@ -86,35 +78,51 @@ app.post('/api/ia', async (req, res) => {
 
         if (data.error) {
             console.error("Error OpenAI:", data.error);
-            return res.status(500).json({
-                respuesta: `Error: ${data.error.message || "Error con la IA"}`
-            });
+            return res.json({ respuesta: generarRespuestaLocal(mensaje) });
         }
 
-        if (!data.choices || !data.choices[0]) {
-            return res.status(500).json({
-                respuesta: "No se pudo generar una respuesta"
-            });
+        const respuestaIA = data.choices?.[0]?.message?.content;
+        
+        if (!respuestaIA) {
+            return res.json({ respuesta: generarRespuestaLocal(mensaje) });
         }
 
-        res.json({
-            respuesta: data.choices[0].message.content
-        });
+        res.json({ respuesta: respuestaIA });
 
     } catch (error) {
-        console.error("Error servidor:", error);
-        res.status(500).json({
-            respuesta: "Error interno del servidor. Intenta de nuevo más tarde."
-        });
+        console.error("Error:", error);
+        res.json({ respuesta: generarRespuestaLocal(mensaje) });
     }
 });
 
 // ====================
-// MANEJO DE ERRORES
+// RESPUESTAS LOCALES (fallback)
 // ====================
-app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'index.html'));
-});
+function generarRespuestaLocal(mensaje) {
+    const msg = mensaje.toLowerCase();
+    
+    if (msg.includes("hola") || msg.includes("buenas")) {
+        return "👋 ¡Hola! Soy ZENTRI, tu asistente vocacional. ¿En qué puedo ayudarte? Puedo informarte sobre carreras, áreas de estudio o recomendarte el test vocacional.";
+    }
+    
+    if (msg.includes("test") || msg.includes("vocacional")) {
+        return "🎯 El test vocacional te ayuda a descubrir qué carreras se adaptan mejor a tus intereses. ¡Solo son 8 preguntas! Encuéntralo en el menú principal o en la página de inicio.";
+    }
+    
+    if (msg.includes("carreras") && msg.includes("tecnologia")) {
+        return "💻 En el área de Tecnología tenemos: Ingeniería en Software, Ingeniería en Sistemas e Inteligencia Artificial. ¿Te gustaría saber más sobre alguna?";
+    }
+    
+    if (msg.includes("carreras") && msg.includes("salud")) {
+        return "🏥 En el área de Salud tenemos: Medicina, Enfermería y Psicología. ¿Quieres más información de alguna carrera específica?";
+    }
+    
+    if (msg.includes("carreras") || msg.includes("que estudiar")) {
+        return "📚 Tenemos carreras en 6 áreas: Tecnología, Salud, Ciencias Sociales, Negocios, Artes y Ciencias Exactas. ¿Te interesa alguna área en particular? También puedes ver el catálogo completo en la sección 'Carreras'.";
+    }
+    
+    return "🎓 Puedo ayudarte con información sobre carreras, áreas de estudio o el test vocacional. ¿Qué te gustaría saber? También puedes explorar el catálogo de carreras en el menú superior.";
+}
 
 // ====================
 // INICIAR SERVIDOR

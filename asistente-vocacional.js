@@ -2,7 +2,7 @@ class AsistenteVocacional {
 
 constructor(){
 
-this.apiKey = "sk-R2onyEdnHCZlexjl05319aCbB8454c33B826415f8bF970F2";
+this.apiKey = "sk-ZXk1HaolLp6BU68B236e1eF237B24fFf9910E4CbEd619a9e";
 this.apiURL = "https://api.apiyi.com/v1/chat/completions";
 
 this.carrerasDB = window.CARRERAS_DB || {};
